@@ -4,45 +4,43 @@ import { View, Text,Image } from 'react-native';
 import {createAppContainer} from 'react-navigation'
 import {createBottomTabNavigator} from 'react-navigation-tabs'
 import {createStackNavigator} from 'react-navigation-stack'
-import FindDoc from '../screens/FindDoc';
-import ChatScreen from '../screens/ChatScreen';
 import AmbulanceEmergency from '../screens/AmbulanceEmergency';
-
+import ChatScreen from '../screens/ChatScreen';
+import FindDoc from '../screens/FindDoc';
 
 
 
 const ambulance=createStackNavigator({
-  AmbulanceEmergency:AmbulanceEmergency
+  ambulanceEmergency:{screen:AmbulanceEmergency}
 })
 
 const chatscreen=createStackNavigator({
-  ChatScreen:ChatScreen
+    chatScreen:{screen:ChatScreen}
 })
-
 const finddoc=createStackNavigator({
-    FindDoc:FindDoc
+    findDoc:{screen:FindDoc}
 })
 const BottomTabNavigator = createBottomTabNavigator(
   {
-    Ambulanceemergency:ambulance,
-    Chatscreen:chatscreen,
-    Finddoc:finddoc
-    
-    
+    "Emergency": { screen: ambulance },
+    "BayMax":{screen:chatscreen},
+    "Find Doc":{screen:finddoc}
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
-
+      
       headerBackAllowFontScaling: true,
     //   tabBarIcon: ({ focused, horizontal, tintColor }) => {
     //     const { routeName } = navigation.state;
-
-    //     if (routeName.includes("Ambulanceemergency")) {
+    //     let iconName=null
+    //     if (routeName.includes("Emergency")) {
     //       iconName = focused ? require('../assets/homeSelect.png') : require('../assets/homeUnselect.png');
-    //     } else if (routeName.includes("Chatscreen")) {
+    //     } 
+    //     else if (routeName.includes("BayMax")) {
     //       iconName = focused ? require('../assets/classromSelect.png') : require('../assets/classromUnselect.png')
 
-    //     } else if (routeName.includes("Finddoc")) {
+    //     } 
+    //     else if (routeName.includes("Find Doc")) {
     //       iconName = focused ? require('../assets/accountSelect.png') : require('../assets/accountUnselect.png')
     //     } 
     //     return (
