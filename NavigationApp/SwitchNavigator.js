@@ -5,9 +5,11 @@ import { createSwitchNavigator,createAppContainer }
 import {createStackNavigator} from 'react-navigation-stack'
 import Home from '../screens/Home';
 import Login from '../screens/Login';
+import SignUp from '../screens/SignUp';
 
 const Main=createStackNavigator({
-    Login:{screen:Login}
+    Login:{screen:Login},
+    SignUp:{screen:SignUp}
 })
 
 const SwitchNavigator=createSwitchNavigator({

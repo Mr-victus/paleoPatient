@@ -7,7 +7,7 @@ import fb from '../Assets/facebook.png';
 import google from '../Assets/google.png';
 import {Icon} from 'native-base';
 
-class Login extends Component {
+class SignUp extends Component {
     static navigationOptions = { headerShown: false }
     constructor(props) {
         super(props);
@@ -19,29 +19,14 @@ class Login extends Component {
         return (
             <SafeAreaView style={{flex:1 ,backgroundColor:"white"}}>
                 
-                <View style={{marginTop:hp("5%"),justifyContent:"center",alignItems:"center",
-                            borderRadius:20,
-                            marginHorizontal:50,
-                            paddingHorizontal:50,
-                            paddingVertical:50,
-                            backgroundColor: 'white',
-                            shadowColor: "#000",
-                            shadowOffset: {
-                                width: 0,
-                                height: 4,
-                            },
-                            shadowOpacity: 0.32,
-                            shadowRadius: 5.46,
-                            height:hp("5%"),
-
-                            elevation: 9,}}>
+                <View style={{marginTop:hp("3%"),justifyContent:"center",alignItems:"center"}}>
                         <Text style={{fontSize:25,color:"#614BF9",fontStyle:"italic",}}>Paleo Patient</Text>
                     </View>
                    
-                <View style={{justifyContent:"center",alignItems:"center",marginTop:hp("10%")}} >
+                <View style={{justifyContent:"center",alignItems:"center",marginTop:hp("5%")}} >
                     <View style={{flexDirection:"row",marginBottom:hp("2%")}}>
                 <View style={{}} >
-                        <Text style={{marginRight:hp("23%"),marginBottom:hp("2%"),color:"#614bf9",fontSize:20,fontStyle:"italic"}}>Sign In</Text>
+                        <Text style={{marginRight:hp("23%"),marginBottom:hp("2%"),color:"#614bf9",fontSize:20,fontStyle:"italic"}}>Sign Up</Text>
                     </View>
                     <View style={{height:hp("6.5%"),width:wp("19%")}} >
                         <Image source={image} style={{height:hp("5.5%"),width:wp("14%")}}/>
@@ -65,7 +50,7 @@ class Login extends Component {
                             },
                             shadowOpacity: 0.32,
                             shadowRadius: 5.46,
-                            height:hp("50%"),
+                            height:hp("60%"),
 
                             elevation: 9,
                             width:hp("42%")
@@ -75,23 +60,15 @@ class Login extends Component {
                         }}>
                          
                 <View>
+                <TextInput style={{ backgroundColor: 'white', color: 'black' }} label='Full Name' value={this.state.email} onChangeText={(text) => this.setState({ email: text })}  theme={{colors: {primary: '#614bf9'}}}/>
                             <TextInput style={{ backgroundColor: 'white', color: 'black' }} label='Email' value={this.state.email} onChangeText={(text) => this.setState({ email: text })}  theme={{colors: {primary: '#614bf9'}}}/>
                             <TextInput style={{  backgroundColor: 'white',marginTop:10 }} label='Password' selectionColor='#6EF31A' value={this.state.password} onChangeText={(text) => this.setState({ password: text })} secureTextEntry={true} theme={{colors: {primary: '#614bf9'}}} />
-                            <Text style={{ fontSize: 10,marginTop:30 }}>or sign in with other social media</Text>
+                            <TextInput style={{  backgroundColor: 'white',marginTop:10 }} label='Conform Password' selectionColor='#6EF31A' value={this.state.password} onChangeText={(text) => this.setState({ password: text })} secureTextEntry={true} theme={{colors: {primary: '#614bf9'}}} />
+                           
                             </View>
-                            <View style={{flexDirection:"row",marginTop:hp("1%")}}>
-                            <TouchableOpacity onPress={()=>{this.props.navigation.navigate("SignUp")}} >
-                                
-                                    <Image source={fb} style={{width:wp("10%"),height:hp("5%")}}/>
-                                </TouchableOpacity>
-                                <TouchableOpacity>
-                                
-                                    <Image source={google} style={{width:wp("10%"),height:hp("5%"),marginLeft:hp("1%")}}/>
-                                </TouchableOpacity>
-                                </View>
                           
                             <TouchableOpacity onPress={() => {
-                                this.props.navigation.navigate('Home')
+                                this.props.navigation.navigate('Login')
                             }}>
                                 <View style={{
                                     backgroundColor: 'white', borderRadius: 30, height: 20, width: 80, justifyContent: 'center', shadowColor: "#000",
@@ -108,30 +85,30 @@ class Login extends Component {
                                     height:hp("5%"),
                                     width:wp("30%"),
                                 }}>
-                                    <Text style={{ color: "#614BF9", alignSelf: 'center' }}>SIGN IN ></Text>
+                                    <Text style={{ color: "#614BF9", alignSelf: 'center' }}>SIGN UP ></Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
                     </View>
-
-                    <View style={{marginLeft:hp("8%"),marginTop:hp("2%"),flex:1,flexDirection:"row"}}>
-                    <View style={{flex:0.5}}>
-                    <Text style={{fontSize:10}}>
-                    By Signing In You Are Accepting Our 
-                    </Text>
-                    </View>
-                    <View style={{flex:0.5}}>
-                        <Text style={{fontSize:10,color:"#614BF9"}}>Terms And Conditions</Text>
-                    </View>
-                    </View>
-                    <View>
+                    <View style={{marginRight:hp("19%")}}>
+                    <Text style={{ fontSize: 10,marginTop:30 }}>or sign in with other social media</Text>
+                    <View style={{flexDirection:"row",marginTop:hp("1%")}}>
+                  
+                            <TouchableOpacity onPress={()=>{this.props.navigation.navigate("SignUP")}} >
+                                
+                                    <Image source={fb} style={{width:wp("10%"),height:hp("5%")}}/>
+                                </TouchableOpacity>
+                                <TouchableOpacity>
+                                
+                                    <Image source={google} style={{width:wp("10%"),height:hp("5%"),marginLeft:hp("1%")}}/>
+                                </TouchableOpacity>
+                                </View>
                         {/* forgot pass and shits */}
-                    </View>
-
+                        </View>
                 </View>
             </SafeAreaView>
         );
     }
 }
 
-export default Login;
+export default SignUp;
