@@ -3,6 +3,8 @@ import { View, Text,Button,Image,TouchableOpacity } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
 import ImagePicker from 'react-native-image-picker';
 import { Base64 } from 'js-base64';
+import Voice from 'react-native-voice';
+
 // import { Icon } from 'react-native-paper/lib/typescript/src/components/Avatar/Avatar';
 // import {Icon} from 'native-base'
 const options = {
@@ -16,12 +18,144 @@ const options = {
 class ChatScreen extends Component {
   constructor(props) {
     super(props);
+    Voice.onSpeechStart = this.onSpeechStart;
+    Voice.onSpeechRecognized = this.onSpeechRecognized;
+    Voice.onSpeechEnd = this.onSpeechEnd;
+    Voice.onSpeechError = this.onSpeechError;
+    Voice.onSpeechResults = this.onSpeechResults;
+    Voice.onSpeechPartialResults = this.onSpeechPartialResults;
+    Voice.onSpeechVolumeChanged = this.onSpeechVolumeChanged;
     this.state = {
         messages: [],
         avatarSource:'',
-        showAttachment:false
+        showAttachment:true,
+        recognized: '',
+        talking:false,
+    pitch: '',
+    error: '',
+    end: '',
+    started: '',
+    results: [],
+    partialResults: [],
     };
   }
+
+  componentWillUnmount() {
+    Voice.destroy().then(Voice.removeAllListeners);
+  }
+
+
+  onSpeechStart = e => {
+    // eslint-disable-next-line
+    console.log('onSpeechStart: ', e);
+    this.setState({
+      started: '√',
+    });
+  };
+
+  onSpeechRecognized = e => {
+    // eslint-disable-next-line
+    console.log('onSpeechRecognized: ', e);
+    this.setState({
+      recognized: '√',
+    });
+  };
+
+  onSpeechEnd = e => {
+    // eslint-disable-next-line
+    console.log('onSpeechEnd: ', e);
+    this.setState({
+      end: '√',
+    });
+  };
+
+  onSpeechError = e => {
+    // eslint-disable-next-line
+    console.log('onSpeechError: ', e);
+    this.setState({
+      error: JSON.stringify(e.error),
+    });
+  };
+
+  onSpeechResults = e => {
+    // eslint-disable-next-line
+    console.log('onSpeechResults: ', e);
+    this.setState({
+      results: e.value,
+    });
+  };
+
+  onSpeechPartialResults = e => {
+    // eslint-disable-next-line
+    console.log('onSpeechPartialResults: ', e);
+    this.setState({
+      partialResults: e.value,
+    });
+  };
+
+  onSpeechVolumeChanged = e => {
+    // eslint-disable-next-line
+    console.log('onSpeechVolumeChanged: ', e);
+    this.setState({
+      pitch: e.value,
+    });
+  };
+
+  _startRecognizing = async () => {
+    this.setState({
+      recognized: '',
+      pitch: '',
+      error: '',
+      started: '',
+      results: [],
+      partialResults: [],
+      end: '',
+      talking:true
+    });
+
+    try {
+      await Voice.start('en-US');
+    } catch (e) {
+      //eslint-disable-next-line
+      console.error(e);
+    }
+  };
+
+  _stopRecognizing = async () => {
+    try {
+      await Voice.stop();
+    } catch (e) {
+      //eslint-disable-next-line
+      console.error(e);
+    }
+  };
+
+  _cancelRecognizing = async () => {
+    try {
+      await Voice.cancel();
+    } catch (e) {
+      //eslint-disable-next-line
+      console.error(e);
+    }
+  };
+
+  _destroyRecognizer = async () => {
+    try {
+      await Voice.destroy();
+    } catch (e) {
+      //eslint-disable-next-line
+      console.error(e);
+    }
+    this.setState({
+      recognized: '',
+      pitch: '',
+      error: '',
+      started: '',
+      results: [],
+      partialResults: [],
+      end: '',
+    });
+  };
   componentDidMount() {
     this.setState({
       messages: [
@@ -50,7 +184,12 @@ class ChatScreen extends Component {
             _id: this.randomid(), //some random number
             text: 'How you Doing', //the text message
             createdAt: new Date(), //date as a JS object if you send something else the app will work but it will show a "inavlid date" 
-            image:'https://seeklogo.com/images/R/react-logo-7B3CE81517-seeklogo.com.png' //image link (if any)
+            //image:'https://seeklogo.com/images/R/react-logo-7B3CE81517-seeklogo.com.png', //image link (if any)
+            user: {
+              _id: 2,
+              name: 'React Native',
+              avatar: 'https://placeimg.com/140/140/any',
+            },
            
           }
      }
@@ -71,14 +210,36 @@ class ChatScreen extends Component {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }))
+    this.setState({partialResults:[]})
   }
 
   render() {
     
     return (
         <>
+       {/* {this.state.partialResults.map((result, index) => {
+          return (
+            <Text key={`partial-result-${index}`} >
+              {result}
+            </Text>
+          );
+        })} */}
+        {console.log(this.state.partialResults[0])}
         <GiftedChat
         isTyping={true}
+        text={this.state.partialResults[0]==undefined?undefined:this.state.partialResults[0]}
+        
+        onInputTextChanged={(text)=>{
+            // if(text!='')
+            // {
+            //   this.setState({partialResults:[text]})
+            // }
+            if(text!=this.state.partialResults[0])
+            {
+              this.setState({partialResults:[]})
+            }
+            
+        }}
         messages={this.state.messages}
         onSend={messages =>{ 
             messages[0]['image']= this.state.avatarSource.uri,
@@ -91,30 +252,34 @@ class ChatScreen extends Component {
           if(this.state.showAttachment)
           {
             return( <TouchableOpacity onPress={()=>{
-              ImagePicker.showImagePicker(options, (response) => {
+              // ImagePicker.showImagePicker(options, (response) => {
                   
                  
-                if (response.didCancel) {
-                  console.log('User cancelled image picker');
-                } else if (response.error) {
-                  console.log('ImagePicker Error: ', response.error);
-                } else if (response.customButton) {
-                  console.log('User tapped custom button: ', response.customButton);
-                } else {
-                  //const source = { uri: response.uri };
+              //   if (response.didCancel) {
+              //     console.log('User cancelled image picker');
+              //   } else if (response.error) {
+              //     console.log('ImagePicker Error: ', response.error);
+              //   } else if (response.customButton) {
+              //     console.log('User tapped custom button: ', response.customButton);
+              //   } else {
+              //     //const source = { uri: response.uri };
                
-                  // You can also display the image using data:
-                  var l=Base64.encode(response.data)
-                  console.log('Response = ', l);
-                  const source = { uri: 'data:image/jpeg;base64,' + response.data };
+              //     // You can also display the image using data:
+              //     var l=Base64.encode(response.data)
+              //     console.log('Response = ', l);
+              //     const source = { uri: 'data:image/jpeg;base64,' + response.data };
                     
-                  this.setState({
-                    avatarSource: source,
-                  });
-                }
-              });
+              //     this.setState({
+              //       avatarSource: source,
+              //     });
+              //   }
+              // });
+              // if(this.state.talking)
+              // this._stopRecognizing()
+              // else
+              this._startRecognizing()
             }}>
-            <Image style={{height:50,width:50}}  source={require('../Assets/attach.png')}/>
+            <Image style={{height:50,width:50}}  source={require('../Assets/sound.png')}/>
             {/* <Icon name="attach-file" type="materialIcon"/> */}
             </TouchableOpacity>
            )
