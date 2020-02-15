@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text,Dimensions,StyleSheet ,Image} from 'react-native';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-// import MapView, {PROVIDER_GOOGLE, Marker} from '../Components/react-native-maps';
+// import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker} from '../Components/react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import {
   widthPercentageToDP as wp,

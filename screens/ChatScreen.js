@@ -4,7 +4,8 @@ import { GiftedChat } from 'react-native-gifted-chat'
 import ImagePicker from 'react-native-image-picker';
 import { Base64 } from 'js-base64';
 import Voice from 'react-native-voice';
-
+import firebase, { Firebase } from 'react-native-firebase';
+import axios from 'axios'
 // import { Icon } from 'react-native-paper/lib/typescript/src/components/Avatar/Avatar';
 // import {Icon} from 'native-base'
 const options = {
@@ -15,6 +16,18 @@ const options = {
       path: 'images',
     },
   };
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBPmL1lRUkFBJPM29n8oMPnGs0-elWkMls",
+    authDomain: "paleo-c7565.firebaseapp.com",
+    databaseURL: "https://paleo-c7565.firebaseio.com",
+    projectId: "paleo-c7565",
+    storageBucket: "paleo-c7565.appspot.com",
+    messagingSenderId: "517418206898",
+    appId: "1:517418206898:web:5b8a32b6dd13c5027debab",
+    measurementId: "G-6NYCZ90TQV"
+  };
+  // 
 class ChatScreen extends Component {
   constructor(props) {
     super(props);
@@ -177,6 +190,27 @@ class ChatScreen extends Component {
   };
   onSend(messages = []) {
       //call the API and then generate the chat accordingly
+      axios.get('http://172.16.7.150:8000/in-android/?in='+messages[0].text).then((response)=>{
+        messages[1]= {
+          _id: this.randomid(), //some random number
+          text: response.data, //the text message
+          createdAt: new Date(), //date as a JS object if you send something else the app will work but it will show a "inavlid date" 
+          //image:'https://seeklogo.com/images/R/react-logo-7B3CE81517-seeklogo.com.png', //image link (if any)
+          user: {
+            _id: 2,
+            name: 'React Native',
+            avatar: 'https://placeimg.com/140/140/any',
+          },
+         
+        }
+        messages.reverse()
+        this.setState(previousState => ({
+          messages: GiftedChat.append(previousState.messages, messages),
+        }))
+        this.setState({partialResults:[]})
+      }).catch((error)=>{
+        console.log(error)
+      })
      if(messages[0].text=='hi')
      {
 
@@ -206,15 +240,10 @@ class ChatScreen extends Component {
             },
           }
      }
-     messages.reverse()
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }))
-    this.setState({partialResults:[]})
+    
   }
 
   render() {
-    
     return (
         <>
        {/* {this.state.partialResults.map((result, index) => {
