@@ -5,7 +5,7 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 import image from '../Assets/loginpage.png';
 import fb from '../Assets/facebook.png';
 import google from '../Assets/google.png';
-import {Icon} from 'native-base';
+
 
 class Login extends Component {
     static navigationOptions = { headerShown: false }
@@ -35,7 +35,7 @@ class Login extends Component {
                             height:hp("5%"),
 
                             elevation: 9,}}>
-                        <Text style={{fontSize:25,color:"#614BF9",fontStyle:"italic",}}>Paleo Patient</Text>
+                        <Text style={{fontSize:25,color:"#614BF9",fontStyle:"italic",}}>Paleo</Text>
                     </View>
                    
                 <View style={{justifyContent:"center",alignItems:"center",marginTop:hp("10%")}} >
@@ -74,9 +74,12 @@ class Login extends Component {
                            
                         }}>
                          
-                <View>
-                            <TextInput style={{ backgroundColor: 'white', color: 'black' }} label='Email' value={this.state.email} onChangeText={(text) => this.setState({ email: text })}  theme={{colors: {primary: '#614bf9'}}}/>
-                            <TextInput style={{  backgroundColor: 'white',marginTop:10 }} label='Password' selectionColor='#6EF31A' value={this.state.password} onChangeText={(text) => this.setState({ password: text })} secureTextEntry={true} theme={{colors: {primary: '#614bf9'}}} />
+                <View style={{marginRight:hp("2%")}}>
+                            <TextInput style={{ backgroundColor: 'white', color: 'black',width:wp("60%") }} label='Email' value={this.state.email} onChangeText={(text) => this.setState({ email: text })}  theme={{colors: {primary: '#614bf9'}}}/>
+                            <TextInput style={{  backgroundColor: 'white',marginTop:10,width:wp("60%") }} label='Password' selectionColor='#6EF31A' value={this.state.password} onChangeText={(text) => this.setState({ password: text })} secureTextEntry={true} theme={{colors: {primary: '#614bf9'}}} />
+                            <Text style={{color: '#614bf9',fontSize:10,marginTop:hp("1%")}}>
+                Forgot Password?
+              </Text>
                             <Text style={{ fontSize: 10,marginTop:30 }}>or sign in with other social media</Text>
                             </View>
                             <View style={{flexDirection:"row",marginTop:hp("1%")}}>
@@ -124,8 +127,17 @@ class Login extends Component {
                         <Text style={{fontSize:10,color:"#614BF9"}}>Terms And Conditions</Text>
                     </View>
                     </View>
-                    <View>
-                        {/* forgot pass and shits */}
+                    <View style={{marginTop:hp("2%")}}>
+                   
+              <Text style={{alignSelf: 'center'}}>{'New to Paleo ?'}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate('SignUp');
+                }}>
+                <Text style={{color: '#614bf9', alignSelf: 'center'}}>
+                  Register
+                </Text>
+              </TouchableOpacity>
                     </View>
 
                 </View>
