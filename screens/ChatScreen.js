@@ -4,10 +4,10 @@ import { GiftedChat } from 'react-native-gifted-chat'
 import ImagePicker from 'react-native-image-picker';
 import { Base64 } from 'js-base64';
 // import { Icon } from 'react-native-paper/lib/typescript/src/components/Avatar/Avatar';
-import {Icon} from 'native-base'
+// import {Icon} from 'native-base'
 const options = {
     title: 'Select Avatar',
-    customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+    //customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
     storageOptions: {
       skipBackup: true,
       path: 'images',
@@ -18,7 +18,8 @@ class ChatScreen extends Component {
     super(props);
     this.state = {
         messages: [],
-        avatarSource:''
+        avatarSource:'',
+        showAttachment:false
     };
   }
   componentDidMount() {
@@ -77,6 +78,7 @@ class ChatScreen extends Component {
     return (
         <>
         <GiftedChat
+        isTyping={true}
         messages={this.state.messages}
         onSend={messages =>{ 
             messages[0]['image']= this.state.avatarSource.uri,
@@ -86,34 +88,39 @@ class ChatScreen extends Component {
         }}
         alwaysShowSend={true}
         renderActions={()=>{
-         return( <TouchableOpacity onPress={()=>{
-            ImagePicker.showImagePicker(options, (response) => {
-                
-               
-              if (response.didCancel) {
-                console.log('User cancelled image picker');
-              } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-              } else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-              } else {
-                //const source = { uri: response.uri };
-             
-                // You can also display the image using data:
-                var l=Base64.encode(response.data)
-                console.log('Response = ', l);
-                const source = { uri: 'data:image/jpeg;base64,' + response.data };
+          if(this.state.showAttachment)
+          {
+            return( <TouchableOpacity onPress={()=>{
+              ImagePicker.showImagePicker(options, (response) => {
                   
-                this.setState({
-                  avatarSource: source,
-                });
-              }
-            });
-          }}>
-          <Image style={{height:50,width:50}}  source={require('../Assets/attach.png')}/>
-          {/* <Icon name="attach-file" type="materialIcon"/> */}
-          </TouchableOpacity>
-         )
+                 
+                if (response.didCancel) {
+                  console.log('User cancelled image picker');
+                } else if (response.error) {
+                  console.log('ImagePicker Error: ', response.error);
+                } else if (response.customButton) {
+                  console.log('User tapped custom button: ', response.customButton);
+                } else {
+                  //const source = { uri: response.uri };
+               
+                  // You can also display the image using data:
+                  var l=Base64.encode(response.data)
+                  console.log('Response = ', l);
+                  const source = { uri: 'data:image/jpeg;base64,' + response.data };
+                    
+                  this.setState({
+                    avatarSource: source,
+                  });
+                }
+              });
+            }}>
+            <Image style={{height:50,width:50}}  source={require('../Assets/attach.png')}/>
+            {/* <Icon name="attach-file" type="materialIcon"/> */}
+            </TouchableOpacity>
+           )
+          }
+          return null
+        
         }}
       />
       </>
