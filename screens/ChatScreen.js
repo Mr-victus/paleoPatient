@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text,Button } from 'react-native';
+import { View, Text,Button,Image,TouchableOpacity } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
 import ImagePicker from 'react-native-image-picker';
 import { Base64 } from 'js-base64';
+// import { Icon } from 'react-native-paper/lib/typescript/src/components/Avatar/Avatar';
+import {Icon} from 'native-base'
 const options = {
     title: 'Select Avatar',
     customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
@@ -74,30 +76,6 @@ class ChatScreen extends Component {
     
     return (
         <>
-        <Button title="click" onPress={()=>{
-            ImagePicker.showImagePicker(options, (response) => {
-                
-               
-                if (response.didCancel) {
-                  console.log('User cancelled image picker');
-                } else if (response.error) {
-                  console.log('ImagePicker Error: ', response.error);
-                } else if (response.customButton) {
-                  console.log('User tapped custom button: ', response.customButton);
-                } else {
-                  //const source = { uri: response.uri };
-               
-                  // You can also display the image using data:
-                  var l=Base64.encode(response.data)
-                  console.log('Response = ', l);
-                  const source = { uri: 'data:image/jpeg;base64,' + response.data };
-                    
-                  this.setState({
-                    avatarSource: source,
-                  });
-                }
-              });
-        }}/>
         <GiftedChat
         messages={this.state.messages}
         onSend={messages =>{ 
@@ -107,6 +85,36 @@ class ChatScreen extends Component {
           _id: 1,
         }}
         alwaysShowSend={true}
+        renderActions={()=>{
+         return( <TouchableOpacity onPress={()=>{
+            ImagePicker.showImagePicker(options, (response) => {
+                
+               
+              if (response.didCancel) {
+                console.log('User cancelled image picker');
+              } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+              } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+              } else {
+                //const source = { uri: response.uri };
+             
+                // You can also display the image using data:
+                var l=Base64.encode(response.data)
+                console.log('Response = ', l);
+                const source = { uri: 'data:image/jpeg;base64,' + response.data };
+                  
+                this.setState({
+                  avatarSource: source,
+                });
+              }
+            });
+          }}>
+          <Image style={{height:50,width:50}}  source={require('../Assets/attach.png')}/>
+          {/* <Icon name="attach-file" type="materialIcon"/> */}
+          </TouchableOpacity>
+         )
+        }}
       />
       </>
     );
