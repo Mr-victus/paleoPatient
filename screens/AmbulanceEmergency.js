@@ -1,13 +1,14 @@
+
+// import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import React, { Component } from 'react';
 import { View, Text,Dimensions,StyleSheet ,Image} from 'react-native';
-// import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import MapView, {PROVIDER_GOOGLE, Marker} from '../Components/react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { Icon } from 'native-base';
+import { Icon, Button } from 'native-base';
 import ambulance from '../Assets/ambulance.png';
 async function requestLocationPermission() {
   try {
@@ -46,7 +47,7 @@ class AmbulanceEmergency extends Component {
       },
       markers: [
         {
-          title: 'carpenter',
+          title: 'Appolo Ambulance',
           coordinates: {
             latitude: 20.334671,
             longitude: 85.802578,
@@ -54,7 +55,7 @@ class AmbulanceEmergency extends Component {
          
         },
         {
-          title: 'carpenter',
+          title: 'Kims Ambulance',
           coordinates: {
             latitude: 20.334672,
             longitude: 85.822474,
@@ -62,7 +63,7 @@ class AmbulanceEmergency extends Component {
         
         },
         {
-          title: 'carpenter',
+          title: 'Sum Ambulance',
           coordinates: {
             latitude: 20.334673,
             longitude: 85.8271,
@@ -70,7 +71,7 @@ class AmbulanceEmergency extends Component {
         
         },
         {
-          title: 'carpenter',
+          title: 'Appolo Ambulance',
           coordinates: {
             latitude: 20.334671,
             longitude: 85.802774,
@@ -78,7 +79,7 @@ class AmbulanceEmergency extends Component {
          
         },
         {
-          title: 'Plumber',
+          title: 'Kims Ambulance',
           coordinates: {
             latitude: 20.339771,
             longitude: 85.855449,
@@ -86,7 +87,7 @@ class AmbulanceEmergency extends Component {
          
         },
         {
-          title: 'Plumber',
+          title: 'Sum Ambulance',
           coordinates: {
             latitude: 20.349771,
             longitude: 85.855449,
@@ -142,6 +143,104 @@ class AmbulanceEmergency extends Component {
           
         },
       ],
+      bloodMarkers: [
+        {
+          title: 'BloodBank',
+          coordinates: {
+            latitude: 20.314663,
+            longitude: 85.802578,
+          },
+         
+        },
+        {
+          title: 'BloodBank',
+          coordinates: {
+            latitude: 20.324225,
+            longitude: 85.822474,
+          },
+        
+        },
+        {
+          title: 'BloodBank',
+          coordinates: {
+            latitude: 22.334667,
+            longitude: 85.8271,
+          },
+        
+        },
+        {
+          title: 'BloodBank',
+          coordinates: {
+            latitude: 21.334660,
+            longitude: 85.802774,
+          },
+         
+        },
+        {
+          title: 'BloodBank',
+          coordinates: {
+            latitude: 20.539564,
+            longitude: 85.855440,
+          },
+         
+        },
+        {
+          title: 'BloodBank',
+          coordinates: {
+            latitude: 20.329769,
+            longitude: 85.855446,
+          },
+         
+        },
+        {
+          title: 'BloodBank',
+          coordinates: {
+            latitude: 20.339415,
+            longitude: 85.855442,
+          },
+          
+        },
+        {
+          title: 'BloodBank',
+          coordinates: {
+            latitude: 20.339354,
+            longitude: 85.855444,
+          },
+          
+        },
+        {
+          title: 'BloodBank',
+          coordinates: {
+            latitude: 21.339771,
+            longitude: 85.655442,
+          },
+        
+        },
+        {
+          title: 'BloodBank',
+          coordinates: {
+            latitude: 20.239771,
+            longitude: 85.155449,
+          },
+       
+        },
+        {
+          title: 'BloodBank',
+          coordinates: {
+            latitude: 20.349771,
+            longitude: 85.155449,
+          },
+        
+        },
+        {
+          title: 'BloodBank',
+          coordinates: {
+            latitude: 20.449751,
+            longitude: 84.655449,
+          },
+          
+        },
+      ],
     };
   }
   async componentDidMount() {
@@ -185,6 +284,11 @@ class AmbulanceEmergency extends Component {
   render() {
     return (
       <View>
+        <View style={{position:'absolute',top:hp('80%'),width:wp('100%')}}>
+          <Button  style={{backgroundColor:"red"}} onPress={()=>{
+
+          }} ><Text style={{marginLeft:wp("40%"),color:"white",fontSize:20,}}>Emergency</Text></Button>
+        </View>
         
         <MapView
                   ref="map"
@@ -211,9 +315,10 @@ class AmbulanceEmergency extends Component {
                         coordinate={{
                           latitude: marker.coordinates.latitude,
                           longitude: marker.coordinates.longitude,
+                          
                           //longitude: marker.coordinates.longitude,
                         }}
-
+                        title={marker.title}
                         key={index}
                       >
                         <Image source={ambulance}  style={{height:hp("9%"),width:hp("5%")}}/>
@@ -221,16 +326,31 @@ class AmbulanceEmergency extends Component {
                      
                   );
                   })}
-                  <Marker
+                  {this.state.bloodMarkers.map((marker, index) => {
+                    return(
+                      
+                      <Marker
+                        coordinate={{
+                          latitude: marker.coordinates.latitude,
+                          longitude: marker.coordinates.longitude,
+                          //longitude: marker.coordinates.longitude,
+                        }}
+                        title={marker.title}
+                        key={index}
+                      
+                      >
+                        <Icon name="hospital-o" type='FontAwesome'  style={{height:hp("9%"),width:hp("5%"),color:"#614bf9"}}/>
+                        </Marker>
+                     
+                  );
+                  })}
+                  {/* <Marker
                     coordinate={{
                       latitude: this.state.region.latitude,
                       longitude: this.state.region.longitude,
                     }}
-                    title={'Trident'}
-                    description={'college'}>
-                    <Text>{`Latitude ${this.state.region.latitude}
-          Longitude ${this.state.region.longitude}`}</Text>
-                  </Marker>
+                    >
+                  </Marker> */}
                 </MapView>
       </View>
     );
