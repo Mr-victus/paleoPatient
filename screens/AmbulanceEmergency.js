@@ -1,13 +1,14 @@
 
 // import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import React, { Component } from 'react';
-import { View, Text,Dimensions,StyleSheet ,Image} from 'react-native';
+import { View, Text,Dimensions,StyleSheet ,Image,TouchableOpacity} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {Linking} from 'react-native'
 import { Icon, Button } from 'native-base';
 import ambulance from '../Assets/ambulance.png';
 async function requestLocationPermission() {
@@ -36,7 +37,10 @@ const LONGITUDE = 0;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 class AmbulanceEmergency extends Component {
+  static navigationOptions = { headerShown: false }
+  
   constructor(props) {
+    
     super(props);
     this.state = {
       region: {
@@ -284,11 +288,13 @@ class AmbulanceEmergency extends Component {
   render() {
     return (
       <View>
-        <View style={{position:'absolute',top:hp('80%'),width:wp('100%')}}>
-          <Button  style={{backgroundColor:"red"}} onPress={()=>{
-
-          }} ><Text style={{marginLeft:wp("40%"),color:"white",fontSize:20,}}>Emergency</Text></Button>
+        <TouchableOpacity onPress={()=>{
+          Linking.openURL(`tel:${8249619206}`);
+        }} style={{zIndex:1,position:'absolute',top:hp('85%'),width:wp('100%'),height:hp('10%'),backgroundColor:'red'}}>
+        <View style={{backgroundColor:'red',alignItems:'center',justifyContent:'center',padding:15}}>
+        <Text style={{alignSelf:'center',justifyContent:"center",color:"white",fontSize:20,}}>Emergency</Text>
         </View>
+        </TouchableOpacity>
         
         <MapView
                   ref="map"
@@ -339,7 +345,8 @@ class AmbulanceEmergency extends Component {
                         key={index}
                       
                       >
-                        <Icon name="hospital-o" type='FontAwesome'  style={{height:hp("9%"),width:hp("5%"),color:"#614bf9"}}/>
+                        {/* <Icon name="hospital-o" type='FontAwesome'  style={{height:hp("9%"),width:hp("5%"),color:"#614bf9"}}/> */}
+                        <Image source={require('../Assets/hospital.png')} style={{height:hp("9%"),width:hp("7%")}}/>
                         </Marker>
                      
                   );

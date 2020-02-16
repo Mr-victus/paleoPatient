@@ -7,6 +7,8 @@ import {createStackNavigator} from 'react-navigation-stack'
 import AmbulanceEmergency from '../screens/AmbulanceEmergency';
 import ChatScreen from '../screens/ChatScreen';
 import FindDoc from '../screens/FindDoc';
+import Pulmonologist from '../screens/Pulmonologist'
+import Psychiatrist from '../screens/Psychiatrist';
 
 
 
@@ -18,7 +20,9 @@ const chatscreen=createStackNavigator({
     chatScreen:{screen:ChatScreen}
 })
 const finddoc=createStackNavigator({
-    findDoc:{screen:FindDoc}
+    findDoc:{screen:FindDoc},
+    pulmonologist:{screen:Pulmonologist},
+    psychiatrist:{screen:Psychiatrist}
 })
 const BottomTabNavigator = createBottomTabNavigator(
   {
@@ -30,31 +34,33 @@ const BottomTabNavigator = createBottomTabNavigator(
     defaultNavigationOptions: ({ navigation }) => ({
       
       headerBackAllowFontScaling: true,
-    //   tabBarIcon: ({ focused, horizontal, tintColor }) => {
-    //     const { routeName } = navigation.state;
-    //     let iconName=null
-    //     if (routeName.includes("Emergency")) {
-    //       iconName = focused ? require('../assets/homeSelect.png') : require('../assets/homeUnselect.png');
-    //     } 
-    //     else if (routeName.includes("BayMax")) {
-    //       iconName = focused ? require('../assets/classromSelect.png') : require('../assets/classromUnselect.png')
+      tabBarIcon: ({ focused, horizontal, tintColor }) => {
+        const { routeName } = navigation.state;
+        let iconName=null
+        if (routeName.includes("Emergency")) {
+          iconName = focused ? require('../Assets/warning.png') : require('../Assets/warning.png');
+        } 
+        else if (routeName.includes("BayMax")) {
+          iconName = focused ? require('../Assets/baymax.png') : require('../Assets/baymax.png');
 
-    //     } 
-    //     else if (routeName.includes("Find Doc")) {
-    //       iconName = focused ? require('../assets/accountSelect.png') : require('../assets/accountUnselect.png')
-    //     } 
-    //     return (
-    //       <Image
-    //         source={iconName}
-    //         style={{ height: 25, width: 25 }}
-    //         color={tintColor}
-    //       />
+
+        } 
+        else if (routeName.includes("Find Doc")) {
+          iconName = focused ? require('../Assets/doctor.png') : require('../Assets/doctor.png');
+
+        } 
+        return (
+          <Image
+            source={iconName}
+            style={{ height: 25, width: 25 }}
+            color={tintColor}
+          />
           
-    //     );
-    //   }
+        );
+      }
     }),
     tabBarOptions: {
-      activeTintColor: "#6EF31A",
+      activeTintColor: "#8654ee",
       style: {
         justifyContent: "center",
         alignItems: "center",

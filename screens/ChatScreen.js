@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text,Button,Image,TouchableOpacity } from 'react-native';
+import { View, Text,Button,Image,TouchableOpacity, StatusBar } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
 import ImagePicker from 'react-native-image-picker';
 import { Base64 } from 'js-base64';
 import Voice from 'react-native-voice';
 import firebase, { Firebase } from 'react-native-firebase';
 import axios from 'axios'
+import LinearGradient from 'react-native-linear-gradient';
+import Tts from 'react-native-tts';
+
 // import { Icon } from 'react-native-paper/lib/typescript/src/components/Avatar/Avatar';
 // import {Icon} from 'native-base'
 const options = {
@@ -18,6 +21,8 @@ const options = {
   };
   // 
 class ChatScreen extends Component {
+  static navigationOptions = { headerShown: false }
+
   constructor(props) {
     super(props);
     Voice.onSpeechStart = this.onSpeechStart;
@@ -30,7 +35,7 @@ class ChatScreen extends Component {
     this.state = {
         messages: [],
         avatarSource:'',
-        showAttachment:true,
+        showAttachment:false,
         recognized: '',
         talking:false,
     pitch: '',
@@ -39,6 +44,7 @@ class ChatScreen extends Component {
     started: '',
     results: [],
     partialResults: [],
+    mute:true
     };
   }
 
@@ -193,12 +199,23 @@ class ChatScreen extends Component {
          name:'newFile.jpg',
          type:'image/jpg'
       });
-        axios.post('http://172.16.7.150:8000/',data,{headers:{
+        axios.post('http://192.168.43.117:8000/attachment-classify-android/',data,{headers:{
           'Content-Type':'image/jpg'
-        }})
+        },
+        onUploadProgress:(progressEvent)=>{
+          console.log(parseInt( Math.round( ( progressEvent.loaded / progressEvent.total ) * 100 )))
+        }
+      }).then((response)=>{
+            console.log(response)
+        }).catch((err)=>{
+            console.log(err)
+        })
       }
       else{
-        axios.get('http://172.16.7.150:8000/in-android/?in='+messages[0].text).then((response)=>{
+        axios.get('http://192.168.43.117:8000/in-android/?in='+messages[0].text).then((response)=>{
+          if(!this.state.mute)
+          Tts.speak(response.data.response);
+
           messages[0]= {
             _id: this.randomid(), //some random number
             text: response.data.response, //the text message
@@ -208,7 +225,8 @@ class ChatScreen extends Component {
             user: {
               _id: 2,
               name: 'React Native',
-              avatar: 'https://placeimg.com/140/140/any',
+              avatar:'https://www.onelargeprawn.co.za/wp-content/uploads/2014/12/Baymax.jpg'
+
             },
   
            
@@ -269,7 +287,29 @@ class ChatScreen extends Component {
           );
         })} */}
         {console.log(this.state.partialResults[0])}
+        {/* // #614bf9  #b365f8 */}
+        <StatusBar backgroundColor="#614bf9" barStyle="light-content" />
+        <LinearGradient
+        colors={[
+          "#614bf9",
+          "#b365f8",
+        ]}
+        style={{flex:1}}
+        >
+          <TouchableOpacity onPress={()=>{
+            this.setState({mute:!this.state.mute})
+          }}>
+          <View>
+            <Image style={{height:50,width:50}} source={this.state.mute?require('../Assets/mute.png'):require('../Assets/button.png')}/>
+          </View>
+          </TouchableOpacity>
         <GiftedChat
+        listViewProps={{
+          style: {
+            
+            // backgroundColor: ,
+          },
+        }}
         isTyping={true}
         text={this.state.partialResults[0]==undefined?undefined:this.state.partialResults[0]}
         
@@ -369,6 +409,8 @@ class ChatScreen extends Component {
         
         }}
       />
+      </LinearGradient>
+     
       </>
     );
   }

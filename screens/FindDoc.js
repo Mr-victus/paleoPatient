@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text,StyleSheet ,ScrollView,Image,TextInput} from 'react-native';
+import { View, Text,StyleSheet ,ScrollView,Image,TextInput,TouchableOpacity} from 'react-native';
 import hospitalImage from '../Assets/hospital.jpg';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import SearchBar from 'react-native-search-bar';
+import ImagePicker from 'react-native-image-picker';
+
 import {
   Container,
   Content,
@@ -17,19 +19,133 @@ import {
   Left,
   ListItem,
   Right,
-  TouchableOpacity,
 } from 'native-base';
 import ViewMoreText from 'react-native-view-more-text';
+import axios from 'axios';
 // import { TextInput } from 'react-native-paper';
-
+const options = {
+  title: 'Select Avatar',
+  //customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
+  storageOptions: {
+    skipBackup: true,
+    path: 'images',
+  },
+};
 class FindDoc extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      items:[],
+      search:''
     };
   }
 
+  callApi(){
+    if(this.state.items.length==0)
+    {
+      axios.get('http://192.168.43.117:8000/all-doctors/').then((response)=>{
+        console.log(response.data)
+        this.setState({items:response.data})
+      }).catch((err)=>{
+        console.log(err)
+
+      }) 
+    }
+  }
+
+  rednerDocs(){
+    let arr=[]
+
+    for(let i=0;i<this.state.items.length;i++)
+    {
+      
+      var item=this.state.items[i];
+      arr.push(
+        <TouchableOpacity onPress={()=>{
+          console.log('dsd')
+        }}>
+        <Card style={{width: hp('45%')}}
+        
+        >
+                <CardItem
+                  button
+                  onPress={() => {
+                    console.log(this.state.items[i].speciality)
+                    if(this.state.items[i].speciality=='Pulmonologist')
+                    {
+                      this.props.navigation.navigate('pulmonologist',{id:this.state.items[i].pk});
+
+                    }
+                    else if(this.state.items[i].speciality=='Psychiatrist'){
+                      this.props.navigation.navigate('psychiatrist',{id:this.state.items[i].pk});
+
+                    }
+                    
+                  }}
+                  >
+                  <View style={{flex: 1, flexDirection: 'row'}}>
+                    <Left style={{flex: 0.5}}>
+                      <View>
+                        <Image
+                          source={hospitalImage}
+                          style={{height: 100, width: 150}}
+                        />
+                      </View>
+                    </Left>
+                    <View style={{flex: 0.5}}>
+                      <Text>{item.name}</Text>
+                      <ViewMoreText
+                        numberOfLines={1}
+                        renderViewMore={this.renderViewMore}
+                        renderViewLess={this.renderViewLess}>
+                        <Text style={{fontSize: 12, color: 'grey'}}>
+                          {item.location}
+                        </Text>
+                      </ViewMoreText>
+                      <Text style={{fontSize: 14}}>{item.speciality}</Text>
+                      <Text style={{fontSize: 10}}>{item.phone}</Text>
+                      <View style={{flex: 1, flexDirection: 'row'}}>
+                        <View style={{flex: 0.5,padding:1,borderWidth:1,borderStyle:"solid",borderColor:"black"}}>
+                          <Text style={{fontSize: 10,marginLeft:hp("1%"),color:"grey"}}>Cardiologist</Text>
+                        </View>
+                        <View style={{flex: 0.5,padding:1,borderWidth:1,borderStyle:"solid",borderColor:"black",marginLeft:hp("1%")}}>
+                          <Text style={{fontSize: 10,color:"grey"}}>
+                            Book Now
+                          </Text>
+                        </View>
+                        {/* <View style={{flex:0.3}}>
+                      <Text>Cardiologist</Text>
+                      </View> */}
+                      </View>
+                      <Right>
+                        <View
+                          style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            marginLeft: hp('8%'),
+                          }}>
+                          <View style={{flex: 0.2}}>
+                            <Icon type="FontAwesome" name="star" />
+                          </View>
+                          <View style={{flex: 0.3, marginLeft: hp('1%')}}>
+                            <Text style={{color:"grey"}}>3.5</Text>
+                          </View>
+                        </View>
+                      </Right>
+                      
+                    </View>
+                  </View>
+                </CardItem>
+              </Card>
+              </TouchableOpacity>
+      )
+    }
+
+    return arr
+    
+  }
   render() {
+    this.callApi()
     var items = [
       {
         image: hospitalImage,
@@ -37,7 +153,7 @@ class FindDoc extends Component {
         location:
           'Near Tarini Mandir Saleshree Vihar Chandrashekharpur Bhubaneswar Odisha 752411',
         phone: 8917324901,
-        title: 'model1',
+        speciality: 'model1',
       },
       {
         image: hospitalImage,
@@ -45,81 +161,23 @@ class FindDoc extends Component {
         location:
           'Near Tarini Mandir Saleshree Vihar Chandrashekharpur Bhubaneswar Odisha 752411',
         phone: 8917324901,
-        title: 'model2',
+        speciality: 'model1',
       },
       {
         image: hospitalImage,
-        name: 'Apolo Hospital',
+        name: 'Kalinga Hospital',
         location:
           'Near Tarini Mandir Saleshree Vihar Chandrashekharpur Bhubaneswar Odisha 752411',
         phone: 8917324901,
-        title: 'model3',
+        speciality: 'model1',
       },
-      {
-        image: hospitalImage,
-        name: 'Apolo Hospital',
-        location:
-          'Near Tarini Mandir Saleshree Vihar Chandrashekharpur Bhubaneswar Odisha 752411',
-        phone: 8917324901,
-        title: 'model4',
-      },
-      {
-        image: hospitalImage,
-        name: 'Apolo Hospital',
-        location:
-          'Near Tarini Mandir Saleshree Vihar Chandrashekharpur Bhubaneswar Odisha 752411',
-        phone: 8917324901,
-        title: 'model5',
-      },
-      {
-        image: hospitalImage,
-        name: 'Apolo Hospital',
-        location:
-          'Near Tarini Mandir Saleshree Vihar Chandrashekharpur Bhubaneswar Odisha 752411',
-        phone: 8917324901,
-        title: 'model5',
-      },
-      {
-        image: hospitalImage,
-        name: 'Apolo Hospital',
-        location:
-          'Near Tarini Mandir Saleshree Vihar Chandrashekharpur Bhubaneswar Odisha 752411',
-        phone: 8917324901,
-        title: 'model5',
-      },
-      {
-        image: hospitalImage,
-        name: 'Apolo Hospital',
-        descripton:
-          'Near Tarini Mandir Saleshree Vihar Chandrashekharpur Bhubaneswar Odisha 752411',
-        phone: 8917324901,
-        title: 'model5',
-      },
-      {
-        image: hospitalImage,
-        name: 'Apolo Hospital',
-        descripton:
-          'Near Tarini Mandir Saleshree Vihar Chandrashekharpur Bhubaneswar Odisha 752411',
-        phone: 8917324901,
-        title: 'model5',
-      },
-    ];
+    ]
     return (
       <Container>
         
           <View >
 
-          {/* <SearchBar
-          searchBarStyle="prominent"
-          barStyle="black"
           
-         
-  ref="searchBar"
-  placeholder="Search"
-  // onChangeText={}
-  // onSearchButtonPress={}
-  // onCancelButtonPress={}
-/> */}
           </View>
           <View style={{flexDirection:"row",borderRadius:2,borderWidth:1,borderColor:"white",width:wp("90%"),marginLeft:hp("3%"), backgroundColor: 'white',
                             shadowColor: "#000",
@@ -136,85 +194,14 @@ class FindDoc extends Component {
             <Icon name='search' type='FontAwesome' style={{fontSize:20,marginTop:hp("2.5%"),color:"grey"}} />
             </View>
             <View style={{width:wp("75%"),marginBottom:hp("1%"),justifyContent:"center"}}>
-              <TextInput placeholder="Search" style={{borderBottomWidth:0,borderBottomColor:"grey",marginLeft:hp("1.5%"),fontSize:20,marginTop:hp("1%")}}/>
+              <TextInput value={this.state.search} onChangeText={(text)=>{
+                this.setState({search:text})
+              }} placeholder="Search" style={{borderBottomWidth:0,borderBottomColor:"grey",marginLeft:hp("1.5%"),fontSize:20,marginTop:hp("1%")}}/>
             </View>
           </View>
           <Content>
       <ScrollView style={styles.container}>
-      <List
-        dataArray={items}
-        renderRow={item => (
-          <ListItem noBorder style={{marginBottom: hp('-3%')}}>
-            <Card style={{width: hp('45%')}}>
-              <CardItem
-                button
-                // onPress={() => {
-                //   this.props.navigation.navigate('DetailScreen');
-                // }}
-                >
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                  <Left style={{flex: 0.5}}>
-                    <View>
-                      <Image
-                        source={item.image}
-                        style={{height: 100, width: 150}}
-                      />
-                    </View>
-                  </Left>
-                  <View style={{flex: 0.5}}>
-                    <Text>{item.name}</Text>
-                    <ViewMoreText
-                      numberOfLines={1}
-                      renderViewMore={this.renderViewMore}
-                      renderViewLess={this.renderViewLess}>
-                      <Text style={{fontSize: 12, color: 'grey'}}>
-                        {item.location}
-                      </Text>
-                    </ViewMoreText>
-                    <Text style={{fontSize: 10}}>{item.phone}</Text>
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                      <View style={{flex: 0.5,padding:1,borderWidth:1,borderStyle:"solid",borderColor:"black"}}>
-                        <Text style={{fontSize: 10,marginLeft:hp("1%"),color:"grey"}}>Cardiologist</Text>
-                      </View>
-                      <View style={{flex: 0.5,padding:1,borderWidth:1,borderStyle:"solid",borderColor:"black",marginLeft:hp("1%")}}>
-                        <Text style={{fontSize: 10,color:"grey"}}>
-                          Book Now
-                        </Text>
-                      </View>
-                      {/* <View style={{flex:0.3}}>
-                    <Text>Cardiologist</Text>
-                    </View> */}
-                    </View>
-                    <Right>
-                      <View
-                        style={{
-                          flex: 1,
-                          flexDirection: 'row',
-                          marginLeft: hp('8%'),
-                        }}>
-                        <View style={{flex: 0.2}}>
-                          <Icon type="FontAwesome" name="star" />
-                        </View>
-                        <View style={{flex: 0.3, marginLeft: hp('1%')}}>
-                          <Text style={{color:"grey"}}>3.5</Text>
-                        </View>
-                      </View>
-                    </Right>
-                    {/* <View style={{flex:1,flexDirection:"row",marginLeft:hp("8%")}}>
-                    <View style={{flex:0.2,marginLeft:hp("1%")}}>
-                    <Icon type="FontAwesome" name="star" />
-                    </View>
-                    <View style={{flex:0.3,marginLeft:hp("2%")}}>
-                    <Text>3.5</Text>
-                    </View>
-                    </View> */}
-                  </View>
-                </View>
-              </CardItem>
-            </Card>
-          </ListItem>
-        )}
-      />
+      {this.rednerDocs()}
     </ScrollView>
     </Content>
     </Container>

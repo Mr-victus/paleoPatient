@@ -20,7 +20,7 @@ class Login extends Component {
         return (
             <SafeAreaView style={{flex:1 ,backgroundColor:"white"}}>
                 
-                <View style={{marginTop:hp("5%"),justifyContent:"center",alignItems:"center",
+                {/* <View style={{marginTop:hp("5%"),justifyContent:"center",alignItems:"center",
                             borderRadius:20,
                             marginHorizontal:50,
                             paddingHorizontal:50,
@@ -37,9 +37,9 @@ class Login extends Component {
 
                             elevation: 9,}}>
                         <Text style={{fontSize:25,color:"#614BF9",fontStyle:"italic",}}>Paleo</Text>
-                    </View>
+                    </View> */}
                    
-                <View style={{justifyContent:"center",alignItems:"center",marginTop:hp("10%")}} >
+                <View style={{justifyContent:"center",alignItems:"center",marginTop:hp("15%")}} >
                     <View style={{flexDirection:"row",marginBottom:hp("2%")}}>
                 <View style={{}} >
                         <Text style={{marginRight:hp("23%"),marginBottom:hp("2%"),color:"#614bf9",fontSize:20,fontStyle:"italic"}}>Sign In</Text>
